@@ -23,36 +23,48 @@ const AuthForm = () => {
     const enteredPassword = passwordInputRef.current.value;
 
      setIsLoading(true);
+     let url;
+
 
     if (isLogin) {
       // Handle login logic here
+
+      url='https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBe59Ffpjr8AlNv8oSvdCXFsjXtfB8EPpQ'
     } else {
-      fetch('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=YOUR_API_KEY', {
-        method: 'POST',
-        body: JSON.stringify({
-          email: enteredEmail,
-          password: enteredPassword,
-          returnSecureToken: true,
-        }),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
-        .then((res) => {
-          setIsLoading(false);
-          if (res.ok) {
-            // Account created successfully, handle accordingly
-          } else {
-            return res.json().then((data) => {
-              let errorMessage = 'Authentication error';
-              if (data && data.error && data.error.message) {
-                errorMessage = data.error.message;
-              }
-              alert(errorMessage);
-            });
-          }
-        });
+      url='https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBe59Ffpjr8AlNv8oSvdCXFsjXtfB8EPpQ'
+     
     }
+    fetch(url , {
+      method: 'POST',
+      body: JSON.stringify({
+        email: enteredEmail,
+        password: enteredPassword,
+        returnSecureToken: true,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((res) => {
+        setIsLoading(false);
+        if (res.ok) {
+          // Account created successfully, handle accordingly
+          return res.json();
+        } else {
+          return res.json().then((data) => {
+            let errorMessage = 'Authentication error';
+            if (data && data.error && data.error.message) {
+              errorMessage = data.error.message;
+            }
+           
+            throw new Error(errorMessage)
+          });
+        }
+      }).then((data)=>{
+        console.log(data);
+      }).catch(err=>{
+        alert(err.Message);
+      })
   };
 
   return (
@@ -86,3 +98,4 @@ const AuthForm = () => {
 };
 
 export default AuthForm;
+
