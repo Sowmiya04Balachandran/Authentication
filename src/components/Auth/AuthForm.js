@@ -71,6 +71,7 @@ const AuthForm = () => {
       }).catch(err=>{
         alert(err.Message);
       })
+      authCtx.logout()
   };
 
   return (
@@ -101,6 +102,7 @@ const AuthForm = () => {
       </form>
     </section>
   );
+  
 };
 
 export default AuthForm;
